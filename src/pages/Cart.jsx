@@ -217,7 +217,7 @@ const Cart = () => {
         <Snackbar
           onClose={handleClose}
           open={deleteItemStatus !== IDLE}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
           <Alert
             severity={
               deleteItemStatus === PENDING

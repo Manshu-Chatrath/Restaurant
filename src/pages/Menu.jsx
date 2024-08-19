@@ -86,7 +86,6 @@ const Menu = () => {
   const handleClose = () => {
     setOpen(false);
     dispatch(defaultCartStatus());
-    dispatch(defaultSelectedItemStatus());
   };
 
   const Loader = () => {
@@ -269,7 +268,7 @@ const Menu = () => {
         )}
         <Snackbar
           open={open}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           autoHideDuration={4000}
           onClose={handleClose}>
           <Alert
