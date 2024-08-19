@@ -21,7 +21,6 @@ import {
 } from "@mui/material";
 import PageHeading from "../components/pageHeading";
 import Footer from "../components/footer";
-import menuImage from "../assets/menu.jpg";
 import Search from "../components/search";
 import Loading from "../components/loader";
 import HorizontalScroll from "../components/horizontalScroll";
@@ -51,10 +50,8 @@ const Menu = () => {
   const cartStatus = useSelector((state) => state.user.cartStatus);
   const [page, setPage] = useState(0);
   const memoizedPageHeading = useMemo(
-    () => (
-      <PageHeading activeNav="Menu" backgroundImage={menuImage} title="Menu" />
-    ),
-    [menuImage]
+    () => <PageHeading activeNav="Menu" isMenu={true} title="Menu" />,
+    []
   );
 
   useEffect(() => {

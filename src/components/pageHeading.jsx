@@ -2,6 +2,8 @@ import { Box, Typography, useMediaQuery } from "@mui/material";
 import Animate from "./animates";
 import { imageAnimation } from "../utils";
 import Header from "./header";
+import cartImage from "../assets/cart.jpg";
+import menuImage from "../assets/menu.jpg";
 import PropTypes from "prop-types";
 const classes = {
   root: {
@@ -36,12 +38,16 @@ const classes = {
     fontFamily: "monospace",
   },
 };
-const PageHeading = ({ title, backgroundImage, activeNav }) => {
+const PageHeading = ({ title, isMenu = true, activeNav }) => {
   const smallScreen = useMediaQuery("(max-width:650px)");
 
   return (
     <>
-      <Box sx={{ ...classes.root, backgroundImage: `url(${backgroundImage})` }}>
+      <Box
+        sx={{
+          ...classes.root,
+          backgroundImage: isMenu ? `url(${menuImage})` : `url(${cartImage})`,
+        }}>
         <Box sx={classes.overlay}></Box>
         <Animate variants={imageAnimation}>
           <Header activeNav={activeNav} />
@@ -61,7 +67,7 @@ const PageHeading = ({ title, backgroundImage, activeNav }) => {
 };
 PageHeading.propTypes = {
   title: PropTypes.string.isRequired,
-  backgroundImage: PropTypes.string.isRequired,
+  isMenu: PropTypes.bool.isRequired,
   activeNav: PropTypes.string.isRequired,
 };
 export default PageHeading;
