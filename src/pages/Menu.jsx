@@ -272,6 +272,7 @@ const Menu = () => {
         <Snackbar
           open={open}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          autoHideDuration={60000}
           onClose={handleClose}>
           <Alert
             severity={

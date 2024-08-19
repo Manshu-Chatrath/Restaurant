@@ -50,6 +50,10 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
   });
 
   useEffect(() => {
+    return () => dispatch(defaultCartStatus());
+  }, []);
+
+  useEffect(() => {
     if (authUser) {
       axios
         .get(
@@ -77,9 +81,7 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
   }, [authUser]);
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    return () => dispatch(defaultCartStatus());
-  }, []);
+
   const onClose = () => {
     dispatch(defaultSelectedItemStatus());
   };
@@ -153,8 +155,8 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
             onClick={handleClose}
             sx={{
               position: "absolute",
-              right: smallScreen ? 10 : 0,
-              top: smallScreen ? 10 : 0,
+              right: smallScreen ? 15 : 0,
+              top: smallScreen ? 15 : 0,
               color: "gray",
               "&:hover": {
                 backgroundColor: "transparent",
