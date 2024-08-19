@@ -20,7 +20,7 @@ import {
   defaultDeleteCartStatus,
 } from "../reducers/userSlice";
 import PageHeading from "../components/pageHeading";
-import cartImage from "../assets/cart.avif";
+import cartImage from "../assets/cart.jpg";
 import CartFoodItemCard from "../components/cartFoodItemCard";
 import DeleteModal from "../components/deleteModal";
 import Footer from "../components/footer";

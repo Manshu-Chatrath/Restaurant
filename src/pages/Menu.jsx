@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import PageHeading from "../components/pageHeading";
 import Footer from "../components/footer";
-import menuImage from "../assets/menu.avif";
+import menuImage from "../assets/menu.jpg";
 import Search from "../components/search";
 import Loading from "../components/loader";
 import HorizontalScroll from "../components/horizontalScroll";

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { keyframes } from "@emotion/react";
 import menuPic1 from "../assets/mainPic3.jpeg";
 import menuPic2 from "../assets/mainPic2.jpeg";
-import menuPic3 from "../assets/mainPic1.avif";
+import menuPic3 from "../assets/mainPic1.jpg";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import Header from "./header";
 import Animate from "./animates";
