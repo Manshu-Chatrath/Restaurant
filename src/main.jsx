@@ -1,9 +1,9 @@
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import CssBaseline from "@mui/material/CssBaseline";
-import { clientId } from "./key.jsx";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+
 // Create a custom theme
 const theme = createTheme({
   typography: {
@@ -39,10 +39,8 @@ const theme = createTheme({
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <GoogleOAuthProvider clientId={clientId}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </GoogleOAuthProvider>
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <App />
+  </ThemeProvider>
 );

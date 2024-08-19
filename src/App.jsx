@@ -8,6 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { apiSlice } from "./reducers/apiSlice/apiSlice";
 import { Provider as Wrapper } from "react-redux";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { saveUser, deleteUser } from "./reducers/userSlice";
 import Menu from "./pages/Menu";
 import Home from "./pages/Home";
@@ -23,8 +24,7 @@ const App = () => {
     useEffect(() => {
       if (storedUser) {
         const user = JSON.parse(storedUser);
-        apiSlice.defaults.headers.common["Authorization"] =
-          user.access_token;
+        apiSlice.defaults.headers.common["Authorization"] = user.access_token;
         dispatch(saveUser(JSON.parse(storedUser)));
       }
     }, [storedUser]);
@@ -83,9 +83,11 @@ const App = () => {
   };
 
   return (
-    <Wrapper store={store}>
-      <Routes />
-    </Wrapper>
+    <GoogleOAuthProvider clientId={process.env.CLIENTID}>
+      <Wrapper store={store}>
+        <Routes />
+      </Wrapper>
+    </GoogleOAuthProvider>
   );
 };
 
