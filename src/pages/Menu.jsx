@@ -83,6 +83,12 @@ const Menu = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (cartStatus === SUCCESS) {
+      dispatch(defaultSelectedItemStatus());
+    }
+  }, [cartStatus]);
+
   const handleClose = () => {
     setOpen(false);
     dispatch(defaultCartStatus());
@@ -272,7 +278,7 @@ const Menu = () => {
         <Snackbar
           open={open}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          autoHideDuration={60000}
+          autoHideDuration={4000}
           onClose={handleClose}>
           <Alert
             severity={

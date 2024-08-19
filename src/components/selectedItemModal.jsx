@@ -132,7 +132,7 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
       onClose={onClose}
       aria-labelledby="status-modal-title"
       aria-describedby="status-modal-description">
-      <Box sx={style} style={{ height: smallScreen ? "100vh" : {} }}>
+      <Box sx={style} style={{ height: smallScreen ? "100%" : {} }}>
         <Box
           sx={{
             position: "relative",
@@ -155,8 +155,8 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
             onClick={handleClose}
             sx={{
               position: "absolute",
-              right: smallScreen ? 15 : 0,
-              top: smallScreen ? 15 : 0,
+              right: 0,
+              top: 0,
               color: "gray",
               "&:hover": {
                 backgroundColor: "transparent",
