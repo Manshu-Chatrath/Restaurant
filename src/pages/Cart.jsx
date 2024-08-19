@@ -19,8 +19,7 @@ import {
   placingOrder,
   defaultDeleteCartStatus,
 } from "../reducers/userSlice";
-import PageHeading from "../components/pageHeading";
-
+import CartHeadingImage from "../components/cartHeadingImage";
 import CartFoodItemCard from "../components/cartFoodItemCard";
 import DeleteModal from "../components/deleteModal";
 import Footer from "../components/footer";
@@ -108,7 +107,7 @@ const Cart = () => {
 
   return (
     <>
-      <PageHeading activeNav="Cart" isMenu={false} title="My Cart" />
+      <CartHeadingImage title="My Cart" activeNav="Cart" />
       <Box style={{ textAlign: "center", marginTop: 30 }}>
         <Typography variant="h4">Cart Items</Typography>
         {!isOrderValid && (

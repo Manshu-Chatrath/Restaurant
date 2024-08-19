@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCategories,
@@ -8,6 +8,7 @@ import {
   defaultCategoriesListStatus,
 } from "../reducers/itemsSlice";
 import FoodItemCard from "../components/foodItemCard";
+import MenuHeadingPage from "../components/menuHeadingImage";
 import VisibilitySensor from "react-visibility-sensor";
 import { PENDING, FAILED, SUCCESS } from "../utils/index";
 import { defaultCartStatus } from "../reducers/userSlice";
@@ -19,7 +20,6 @@ import {
   Typography,
   Snackbar,
 } from "@mui/material";
-import PageHeading from "../components/pageHeading";
 import Footer from "../components/footer";
 import Search from "../components/search";
 import Loading from "../components/loader";
@@ -49,10 +49,6 @@ const Menu = () => {
   const [categoryId, setCategoryId] = useState(null);
   const cartStatus = useSelector((state) => state.user.cartStatus);
   const [page, setPage] = useState(0);
-  const memoizedPageHeading = useMemo(
-    () => <PageHeading activeNav="Menu" isMenu={true} title="Menu" />,
-    []
-  );
 
   useEffect(() => {
     if (itemList.length < totalItems) {
@@ -148,7 +144,7 @@ const Menu = () => {
   return (
     <>
       <Loading status={selectedItemStatus} />
-      {memoizedPageHeading}
+      <MenuHeadingPage title="Menu" activeNav="Menu" />
       <Box style={{ minHeight: "50vh" }}>
         {categoryStatus === PENDING ? (
           <Loader />
