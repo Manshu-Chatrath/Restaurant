@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import Animate from "./animates";
 import { imageAnimation } from "../utils";
-import Loading from "./loader";
 import Header from "./header";
 import PropTypes from "prop-types";
 const classes = {
@@ -40,37 +38,24 @@ const classes = {
 };
 const PageHeading = ({ title, backgroundImage, activeNav }) => {
   const smallScreen = useMediaQuery("(max-width:650px)");
-  const [image, setImage] = useState(null);
-
-  useEffect(() => {
-    if (backgroundImage) {
-      setImage(backgroundImage);
-    }
-
-    return () => setImage(null);
-  }, [backgroundImage]);
 
   return (
     <>
-      {image ? (
-        <Box sx={{ ...classes.root, backgroundImage: `url(${image})` }}>
-          <Box sx={classes.overlay}></Box>
-          <Animate variants={imageAnimation}>
-            <Header activeNav={activeNav} />
-            <Box sx={classes.content}>
-              <Box>
-                <Typography
-                  variant={smallScreen ? "h2" : "h1"}
-                  sx={classes.titleText}>
-                  {title}
-                </Typography>
-              </Box>
+      <Box sx={{ ...classes.root, backgroundImage: `url(${backgroundImage})` }}>
+        <Box sx={classes.overlay}></Box>
+        <Animate variants={imageAnimation}>
+          <Header activeNav={activeNav} />
+          <Box sx={classes.content}>
+            <Box>
+              <Typography
+                variant={smallScreen ? "h2" : "h1"}
+                sx={classes.titleText}>
+                {title}
+              </Typography>
             </Box>
-          </Animate>
-        </Box>
-      ) : (
-        <Loading loading={true} />
-      )}
+          </Box>
+        </Animate>
+      </Box>
     </>
   );
 };

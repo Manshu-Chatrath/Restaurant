@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { keyframes } from "@emotion/react";
-import menuPic1 from "../assets/mainPic1.webp";
+import menuPic1 from "../assets/mainPic3.jpeg";
 import menuPic2 from "../assets/mainPic2.jpeg";
-import menuPic3 from "../assets/mainPic3.jpeg";
+import menuPic3 from "../assets/mainPic1.avif";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-import Loading from "./loader";
 import Header from "./header";
 import Animate from "./animates";
 import { imageAnimation } from "../utils";
@@ -90,74 +89,67 @@ const Main = () => {
   const handleClick = () => navigate("/menu");
   const isSmallScreen = useMediaQuery("(max-width:900px)");
   const smallScreen = useMediaQuery("(max-width:650px)");
-  const [images, setImages] = useState(null);
-  useEffect(() => {
-    setImages(slideShow);
-  }, [slideShow]);
+
   return (
     <>
-      {images ? (
-        <Box sx={{ ...classes.root, animation: `${images} 15s infinite` }}>
-          <Box sx={classes.overlay}></Box>
-          <Animate variants={imageAnimation}>
-            <Header activeNav={"Home"} />
-            <Box sx={classes.content}>
-              <Box style={{ flexDirection: "row" }} sx={classes.titleContainer}>
-                <Box sx={classes.titleBox}>
-                  <Box>
-                    <Typography
-                      variant={smallScreen ? "h2" : isSmallScreen ? "h3" : "h1"}
-                      sx={classes.titleText}>
-                      GRANITE
-                    </Typography>
-                  </Box>
-                  <Box sx={{ textAlign: "end" }}>
-                    <Typography
-                      variant={smallScreen ? "h2" : isSmallScreen ? "h3" : "h1"}
-                      sx={classes.titleText}>
-                      GRILL
-                    </Typography>
-                  </Box>
+      <Box sx={{ ...classes.root, animation: `${slideShow} 15s infinite` }}>
+        <Box sx={classes.overlay}></Box>
+        <Animate variants={imageAnimation}>
+          <Header activeNav={"Home"} />
+          <Box sx={classes.content}>
+            <Box style={{ flexDirection: "row" }} sx={classes.titleContainer}>
+              <Box sx={classes.titleBox}>
+                <Box>
+                  <Typography
+                    variant={smallScreen ? "h2" : isSmallScreen ? "h3" : "h1"}
+                    sx={classes.titleText}>
+                    GRANITE
+                  </Typography>
                 </Box>
-                {!smallScreen && (
-                  <React.Fragment>
-                    <Box sx={classes.borderLeft}></Box>
-                    <Box sx={classes.subtitleContainer}>
-                      <Box>
-                        <Typography variant="h4" sx={classes.subtitleText}>
-                          {`Montreal's one of the best`}
-                        </Typography>
-                        <Typography variant="h4" sx={classes.subtitleText}>
-                          restaurant!
-                        </Typography>
-                      </Box>
+                <Box sx={{ textAlign: "end" }}>
+                  <Typography
+                    variant={smallScreen ? "h2" : isSmallScreen ? "h3" : "h1"}
+                    sx={classes.titleText}>
+                    GRILL
+                  </Typography>
+                </Box>
+              </Box>
+              {!smallScreen && (
+                <React.Fragment>
+                  <Box sx={classes.borderLeft}></Box>
+                  <Box sx={classes.subtitleContainer}>
+                    <Box>
+                      <Typography variant="h4" sx={classes.subtitleText}>
+                        {`Montreal's one of the best`}
+                      </Typography>
+                      <Typography variant="h4" sx={classes.subtitleText}>
+                        restaurant!
+                      </Typography>
                     </Box>
-                  </React.Fragment>
-                )}
-              </Box>
-
-              <Box sx={classes.orderText}>Place an order</Box>
-              <Box>
-                <Button
-                  startIcon={<ShoppingBasketIcon />}
-                  sx={classes.button}
-                  onClick={handleClick}
-                  variant="contained">
-                  Pickup
-                </Button>
-              </Box>
-              <Box>
-                <img
-                  style={{ marginTop: "20px", width: "150px" }}
-                  src="https://refectory.com/wp-content/uploads/2020/02/design_image_opentable_dc2020-badge-mark-only-2x_121719-1-600x600.png"
-                />
-              </Box>
+                  </Box>
+                </React.Fragment>
+              )}
             </Box>
-          </Animate>
-        </Box>
-      ) : (
-        <Loading loading={true} />
-      )}
+
+            <Box sx={classes.orderText}>Place an order</Box>
+            <Box>
+              <Button
+                startIcon={<ShoppingBasketIcon />}
+                sx={classes.button}
+                onClick={handleClick}
+                variant="contained">
+                Pickup
+              </Button>
+            </Box>
+            <Box>
+              <img
+                style={{ marginTop: "20px", width: "150px" }}
+                src="https://refectory.com/wp-content/uploads/2020/02/design_image_opentable_dc2020-badge-mark-only-2x_121719-1-600x600.png"
+              />
+            </Box>
+          </Box>
+        </Animate>
+      </Box>
     </>
   );
 };
