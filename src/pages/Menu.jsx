@@ -83,18 +83,10 @@ const Menu = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (cartStatus === SUCCESS) {
-      dispatch(defaultSelectedItemStatus());
-    }
-  }, [cartStatus]);
-
   const handleClose = () => {
     setOpen(false);
     dispatch(defaultCartStatus());
-    if (cartStatus === SUCCESS) {
-      dispatch(defaultSelectedItemStatus());
-    }
+    dispatch(defaultSelectedItemStatus());
   };
 
   const Loader = () => {
