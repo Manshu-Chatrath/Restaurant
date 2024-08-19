@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { defaultSelectedItemStatus } from "../reducers/itemsSlice";
 import { useGoogleLogin } from "@react-oauth/google";
-import { addToCart, userLogin } from "../reducers/userSlice";
+import { addToCart, userLogin, defaultCartStatus } from "../reducers/userSlice";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -77,6 +77,9 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
   }, [authUser]);
 
   const dispatch = useDispatch();
+  useEffect(() => {
+    return () => dispatch(defaultCartStatus());
+  }, []);
   const onClose = () => {
     dispatch(defaultSelectedItemStatus());
   };
@@ -150,8 +153,8 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
             onClick={handleClose}
             sx={{
               position: "absolute",
-              right: 0,
-              top: 0,
+              right: smallScreen ? 10 : 0,
+              top: smallScreen ? 10 : 0,
               color: "gray",
               "&:hover": {
                 backgroundColor: "transparent",
