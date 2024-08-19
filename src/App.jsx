@@ -10,16 +10,14 @@ import { apiSlice } from "./reducers/apiSlice/apiSlice";
 import { Provider as Wrapper } from "react-redux";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { saveUser, deleteUser } from "./reducers/userSlice";
-import dotenv from "dotenv";
+
 import Menu from "./pages/Menu";
 import Home from "./pages/Home";
 import axios from "axios";
 import Cart from "./pages/Cart";
 import store from "./reducers";
-dotenv.config();
 
 const App = () => {
-  console.log(import.meta.env.VITE_SOME_KEY); //
   const Routes = () => {
     const storedUser = localStorage.getItem("user");
     const authUser = useSelector((state) => state.user.user);
