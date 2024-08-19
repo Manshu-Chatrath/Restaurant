@@ -3,6 +3,7 @@ import {
   Box,
   Typography,
   Button,
+  useMediaQuery,
   CircularProgress,
 } from "@mui/material";
 import PropTypes from "prop-types";
@@ -16,6 +17,7 @@ const Loading = ({
   onClose = () => null,
   errorMessage = "Some error occured!",
 }) => {
+  const isMobile = useMediaQuery("(max-width:500px)");
   const style = {
     position: "absolute",
     top: "50%",
@@ -24,7 +26,14 @@ const Loading = ({
     transform: "translate(-50%, -50%)",
     borderRadius: "25px",
     textAlign: "center",
-    width: isOrder && orderNumber ? "30%" : status === FAILED ? 250 : 200,
+    width:
+      isMobile && isOrder && orderNumber
+        ? "100%"
+        : !isMobile && isOrder && orderNumber
+        ? "30%"
+        : status === FAILED
+        ? 250
+        : 200,
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
@@ -33,6 +42,7 @@ const Loading = ({
     alignItems: "center",
     gap: 2,
   };
+
   return (
     <Modal
       open={isOrder ? open : loading}
