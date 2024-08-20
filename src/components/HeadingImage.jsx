@@ -1,10 +1,10 @@
+import { useState, useLayoutEffect } from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import Animate from "./animates";
 import { imageAnimation } from "../utils";
 import Header from "./header";
-
-import menuImage from "../assets/menu.jpg";
 import PropTypes from "prop-types";
+import Loading from "./loader";
 const classes = {
   root: {
     width: "100vw",
@@ -13,7 +13,6 @@ const classes = {
     backgroundSize: "cover",
     backgroundPosition: "bottom center",
     backgroundRepeat: "no-repeat",
-    backgroundImage: `url(${menuImage})`,
   },
   overlay: {
     height: "80vh",
@@ -39,12 +38,22 @@ const classes = {
     fontFamily: "monospace",
   },
 };
-const MenuHeadingPage = ({ title, activeNav }) => {
+const HeadingImage = ({ title, activeNav, image }) => {
   const smallScreen = useMediaQuery("(max-width:650px)");
+  const [loading, setLoading] = useState(true);
+
+  useLayoutEffect(() => {
+    if (image && loading) {
+      const img = new Image();
+      img.src = image;
+      setLoading(false);
+    }
+  }, [image]);
 
   return (
     <>
-      <Box sx={classes.root}>
+      <Loading loading={loading} />
+      <Box sx={{ ...classes.root, backgroundImage: `url(${image})` }}>
         <Box sx={classes.overlay}></Box>
         <Animate variants={imageAnimation}>
           <Header activeNav={activeNav} />
@@ -62,9 +71,9 @@ const MenuHeadingPage = ({ title, activeNav }) => {
     </>
   );
 };
-MenuHeadingPage.propTypes = {
+HeadingImage.propTypes = {
   title: PropTypes.string.isRequired,
-
+  image: PropTypes.any.isRequired,
   activeNav: PropTypes.string.isRequired,
 };
-export default MenuHeadingPage;
+export default HeadingImage;

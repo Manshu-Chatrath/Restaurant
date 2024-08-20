@@ -1,25 +1,30 @@
-import React from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { keyframes } from "@emotion/react";
 import menuPic1 from "../assets/mainPic3.jpeg";
 import menuPic2 from "../assets/mainPic2.jpeg";
-import menuPic3 from "../assets/mainPic1.jpg";
+import menuPic3 from "../assets/mainPic1.jpeg";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import Header from "./header";
 import Animate from "./animates";
 import { imageAnimation } from "../utils";
+import Loading from "./loader";
+// Preload images
+
+// Animation keyframes with smooth transitions
 const slideShow = keyframes`
-  0% { background-image: url(${menuPic1}) }
-  33% { background-image: url(${menuPic2}) }
-  66% { background-image: url(${menuPic3}) }
-  100% { background-image: url(${menuPic1})}
+  0% { background-image: url(${menuPic1}); }
+  33% { background-image: url(${menuPic2}); }
+  66% { background-image: url(${menuPic3}); }
+  100% {background-image: url(${menuPic1}); }
 `;
 
 const classes = {
   root: {
     width: "100vw",
     height: "100vh",
+    animation: `${slideShow} 15s infinite `,
     position: "relative",
     backgroundSize: "cover",
     backgroundPosition: "bottom center",
@@ -86,13 +91,31 @@ const classes = {
 
 const Main = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const handleClick = () => navigate("/menu");
   const isSmallScreen = useMediaQuery("(max-width:900px)");
   const smallScreen = useMediaQuery("(max-width:650px)");
+  const preloadImages = (images) => {
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+    return true;
+  };
+
+  useLayoutEffect(() => {
+    if (menuPic1 && menuPic2 && menuPic3) {
+      const l = preloadImages([menuPic1, menuPic2, menuPic3]);
+      if (l) {
+        setLoading(false);
+      }
+    }
+  }, []);
 
   return (
     <>
-      <Box sx={{ ...classes.root, animation: `${slideShow} 15s infinite` }}>
+      <Loading loading={loading} />
+      <Box sx={classes.root}>
         <Box sx={classes.overlay}></Box>
         <Animate variants={imageAnimation}>
           <Header activeNav={"Home"} />

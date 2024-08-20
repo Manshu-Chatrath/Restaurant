@@ -8,7 +8,7 @@ import {
   defaultCategoriesListStatus,
 } from "../reducers/itemsSlice";
 import FoodItemCard from "../components/foodItemCard";
-import MenuHeadingPage from "../components/menuHeadingImage";
+import HeadingImage from "../components/HeadingImage";
 import VisibilitySensor from "react-visibility-sensor";
 import { PENDING, FAILED, SUCCESS } from "../utils/index";
 import { defaultCartStatus } from "../reducers/userSlice";
@@ -20,6 +20,7 @@ import {
   Typography,
   Snackbar,
 } from "@mui/material";
+import menuImage from "../assets/menu.jpg";
 import Footer from "../components/footer";
 import Search from "../components/search";
 import Loading from "../components/loader";
@@ -144,7 +145,7 @@ const Menu = () => {
   return (
     <>
       <Loading status={selectedItemStatus} />
-      <MenuHeadingPage title="Menu" activeNav="Menu" />
+      <HeadingImage image={menuImage} title="Menu" activeNav="Menu" />
       <Box style={{ minHeight: "50vh" }}>
         {categoryStatus === PENDING ? (
           <Loader />
