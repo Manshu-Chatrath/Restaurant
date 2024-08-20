@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import Animate from "./animates";
 import { imageAnimation } from "../utils";
@@ -42,7 +42,7 @@ const HeadingImage = ({ title, activeNav, image }) => {
   const smallScreen = useMediaQuery("(max-width:650px)");
   const [loading, setLoading] = useState(true);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (image && loading) {
       const img = new Image();
       img.src = image;

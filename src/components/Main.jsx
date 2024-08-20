@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { keyframes } from "@emotion/react";
@@ -10,9 +10,7 @@ import Header from "./header";
 import Animate from "./animates";
 import { imageAnimation } from "../utils";
 import Loading from "./loader";
-// Preload images
 
-// Animation keyframes with smooth transitions
 const slideShow = keyframes`
   0% { background-image: url(${menuPic1}); }
   33% { background-image: url(${menuPic2}); }
@@ -103,7 +101,7 @@ const Main = () => {
     return true;
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (menuPic1 && menuPic2 && menuPic3) {
       const l = preloadImages([menuPic1, menuPic2, menuPic3]);
       if (l) {
