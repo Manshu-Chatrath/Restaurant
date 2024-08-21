@@ -27,6 +27,7 @@ import PropTypes from "prop-types";
 const SelectedItemModal = memo(function SelectedItemModal({
   selectedItem,
   selectedCartItem = null,
+  setOpen = () => null,
   isEdit = false,
 }) {
   const smallScreen = useMediaQuery("(max-width:500px)");
@@ -73,7 +74,11 @@ const SelectedItemModal = memo(function SelectedItemModal({
   }, [selectedCartItem]);
 
   useEffect(() => {
-    return () => dispatch(defaultCartStatus());
+    return () => {
+      if (!isEdit) {
+        dispatch(defaultCartStatus());
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -107,6 +112,10 @@ const SelectedItemModal = memo(function SelectedItemModal({
 
   const onClose = () => {
     dispatch(defaultSelectedItemStatus());
+    setOpen(false);
+    setQuantity(1);
+    setPrice(0);
+    setExtras(null);
   };
   const calculateDiscount = () => {
     return (
@@ -161,11 +170,14 @@ const SelectedItemModal = memo(function SelectedItemModal({
 
   const handleClose = () => {
     dispatch(defaultSelectedItemStatus());
+    if (isEdit) {
+      setOpen(false);
+    }
   };
 
   return (
     <Modal
-      open={selectedItem ? true : false}
+      open={isEdit ? open : selectedItem ? true : false}
       onClose={onClose}
       aria-labelledby="status-modal-title"
       aria-describedby="status-modal-description">
@@ -310,5 +322,6 @@ SelectedItemModal.propTypes = {
   selectedItem: PropTypes.object.isRequired,
   selectedCartItem: PropTypes.object,
   isEdit: PropTypes.bool,
+  setOpen: PropTypes.func,
 };
 export default SelectedItemModal;

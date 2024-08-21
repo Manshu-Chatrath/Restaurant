@@ -68,9 +68,7 @@ const ExtraItem = ({ item, setExtras, extras, price, setPrice }) => {
       </Box>
       {item.extras.map((extra, index) => {
         let selectedItems;
-
         selectedItems = extras?.find((e) => e.id === extra.extraId)?.extraItems;
-        console.log(selectedItems);
         let isSelected = false;
         if (selectedItems?.length > 0) {
           isSelected = selectedItems?.includes(extra.id);

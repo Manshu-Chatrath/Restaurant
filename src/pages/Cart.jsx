@@ -151,12 +151,9 @@ const Cart = () => {
             return (
               <React.Fragment key={index}>
                 <CartFoodItemCard
-                  open={open}
-                  setOpen={setOpen}
                   setSelectedItem={setSelectedItem}
-                  isOrderValid={isOrderValid}
-                  setIsOrderValid={setIsOrderValid}
                   item={item}
+                  setOpen={setOpen}
                 />
               </React.Fragment>
             );

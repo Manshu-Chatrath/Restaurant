@@ -11,16 +11,17 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Loading from "./loader";
-import { PENDING } from "../utils";
+import { PENDING, SUCCESS } from "../utils";
 import PropTypes from "prop-types";
 import SelectedItemModal from "./selectedItemModal";
-const CartFoodItemCard = ({ item, setOpen, setSelectedItem }) => {
+const CartFoodItemCard = ({ item, setSelectedItem, setOpen }) => {
   const smallScreen = useMediaQuery("(max-width:500px)");
   const selectedItem = useSelector((state) => state.items.selectedItem);
   const [open, setModalOpen] = useState(false);
   const selectedItemStatus = useSelector(
     (state) => state.items.selectedItemStatus
   );
+
   const dispatch = useDispatch();
   const handleClick = () => {
     setModalOpen(true);
@@ -117,19 +118,20 @@ const CartFoodItemCard = ({ item, setOpen, setSelectedItem }) => {
           </Button>
         </Box>
       </Box>
-      {selectedItem?.id === item?.itemId && open && (
+      {selectedItemStatus === SUCCESS && open ? (
         <SelectedItemModal
           selectedItem={selectedItem}
           selectedCartItem={item}
+          setOpen={setModalOpen}
           isEdit={true}
         />
-      )}
+      ) : null}
     </Grid>
   );
 };
 CartFoodItemCard.propTypes = {
   item: PropTypes.object.isRequired,
-  setOpen: PropTypes.func.isRequired,
+  setOpen: PropTypes.func,
   setSelectedItem: PropTypes.func.isRequired,
 };
 export default CartFoodItemCard;
