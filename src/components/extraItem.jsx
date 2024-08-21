@@ -100,9 +100,10 @@ const ExtraItem = ({ item, setExtras, extras, price, setPrice }) => {
               <Box>
                 <CustomizedCheckBox
                   disabled={
-                    (extraItems.length >= item.allowedItems ||
-                      selectedItems.length >= item.allowedItems) &&
-                    !extraItems.includes(extra.id)
+                    (extraItems?.length >= item.allowedItems &&
+                      !extraItems?.includes(extra.id)) ||
+                    (selectedItems?.length >= item.allowedItems &&
+                      !selectedItems?.includes(extra.id))
                   }
                   extra={extra}
                   handleClick={handleClick}
