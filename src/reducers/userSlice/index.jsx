@@ -205,9 +205,9 @@ const userSlice = createSlice({
     builder.addCase(deleteCartItem.rejected, (state) => {
       state.deleteCartItemStatus = FAILED;
     });
-    builder.addCase(deleteCartItem.fulfilled, (state, action) => {
+    builder.addCase(deleteCartItem.fulfilled, (state) => {
       state.deleteCartItemStatus = SUCCESS;
-      state.cartLength = action.payload.cartLength;
+      state.cartLength = state.cartLength - 1;
     });
     builder.addCase(placingOrder.pending, (state) => {
       state.orderStatus = PENDING;
@@ -240,8 +240,9 @@ const userSlice = createSlice({
     builder.addCase(editCartItem.rejected, (state) => {
       state.editCartItemStatus = FAILED;
     });
-    builder.addCase(editCartItem.fulfilled, (state) => {
+    builder.addCase(editCartItem.fulfilled, (state, action) => {
       state.editCartItemStatus = SUCCESS;
+      state.cartLength = action.payload.cartLength;
     });
   },
 });
