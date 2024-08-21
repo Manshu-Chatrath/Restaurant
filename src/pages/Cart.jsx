@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  CircularProgress,
-  Grid,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Box, Typography, Button, Grid, Snackbar, Alert } from "@mui/material";
 import { PENDING, SUCCESS, FAILED, IDLE } from "../utils/index";
 import Loading from "../components/loader";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getCartItems,
   deleteCartItem,
+  defaultEditCartItemStatus,
   defaultOrderStatus,
   defaultCartListStatus,
   placingOrder,
@@ -38,6 +31,9 @@ const Cart = () => {
   const [open, setOpen] = useState(false);
   const deleteItemStatus = useSelector(
     (state) => state.user.deleteCartItemStatus
+  );
+  const editCartItemStatus = useSelector(
+    (state) => state.user.editCartItemStatus
   );
 
   useEffect(() => {
@@ -65,41 +61,47 @@ const Cart = () => {
 
   useEffect(() => {
     if (user) {
-      dispatch(getCartItems({ id: user?.id }));
+      dispatch(getCartItems({ cartId: user?.cartId }));
     }
   }, [user]);
 
   useEffect(() => {
     if (deleteItemStatus === SUCCESS) {
       dispatch(defaultDeleteCartStatus());
-      dispatch(getCartItems({ id: user?.id }));
+      dispatch(getCartItems({ cartId: user?.cartId }));
     }
-  }, [deleteItemStatus]);
+    if (editCartItemStatus === SUCCESS) {
+      dispatch(defaultEditCartItemStatus);
+      dispatch(getCartItems({ cartId: user?.cartId }));
+    }
+  }, [deleteItemStatus, editCartItemStatus]);
 
   const handleClick = () => {
     setLoading(true);
     setOpenModal(true);
-    dispatch(placingOrder({ userId: user?.id, email: user?.email }));
+    dispatch(placingOrder({ cartId: user.cartId, email: user?.email }));
   };
 
   const onDelete = () => {
-    dispatch(deleteCartItem({ id: selectedItem.id, userId: user.id }));
+    dispatch(deleteCartItem({ id: selectedItem.id, cartId: user.cartId }));
   };
 
   const handleClose = () => {
     dispatch(defaultDeleteCartStatus());
+    dispatch(defaultEditCartItemStatus());
     setOpen(false);
   };
 
-  const Loader = () => {
-    return (
-      <Box style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-        <Box>
-          <CircularProgress style={{ color: "black" }} size={30} />
-        </Box>
-      </Box>
-    );
-  };
+  useEffect(() => {
+    let orderIsValid = true;
+    cartItems.some((item) => {
+      if (!item?.isActive || item?.disable) {
+        orderIsValid = false;
+        return true;
+      }
+    });
+    setIsOrderValid(orderIsValid);
+  }, [cartItems]);
 
   const onClose = () => {
     dispatch(defaultOrderStatus());
@@ -125,9 +127,7 @@ const Cart = () => {
           marginTop: "1rem",
         }}
       />
-      {status === PENDING ? (
-        <Loader />
-      ) : cartItems?.length === 0 || !cartItems?.length ? (
+      {cartItems?.length === 0 || !cartItems?.length ? (
         <Box
           sx={{
             textAlign: "center",
@@ -212,23 +212,27 @@ const Cart = () => {
         />
         <Snackbar
           onClose={handleClose}
-          open={deleteItemStatus !== IDLE}
+          autoHideDuration={3000}
+          open={
+            editCartItemStatus === FAILED ||
+            editCartItemStatus === SUCCESS ||
+            deleteItemStatus === SUCCESS ||
+            deleteItemStatus === FAILED
+          }
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
           <Alert
             severity={
-              deleteItemStatus === PENDING
-                ? "info"
-                : deleteItemStatus === FAILED
+              editCartItemStatus === FAILED || deleteItemStatus === FAILED
                 ? "error"
-                : deleteItemStatus === SUCCESS
+                : editCartItemStatus || SUCCESS || deleteItemStatus === SUCCESS
                 ? "success"
                 : ""
             }
             variant="filled"
             sx={{ width: "100%" }}>
-            {deleteItemStatus === PENDING
-              ? "Deleting the item....."
-              : deleteItemStatus === FAILED
+            {editCartItemStatus === SUCCESS
+              ? "Item has been updated"
+              : editCartItemStatus === FAILED || deleteItemStatus === FAILED
               ? "An error has occured!"
               : deleteItemStatus === SUCCESS
               ? "Item has been removed from the cart!"
@@ -236,6 +240,9 @@ const Cart = () => {
           </Alert>
         </Snackbar>
       </Box>
+      {(editCartItemStatus === PENDING ||
+        deleteItemStatus === PENDING ||
+        status === PENDING) && <Loading loading={true} />}
       <Loading
         orderNumber={orderNumber}
         loading={loading}

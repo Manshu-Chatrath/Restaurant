@@ -15,10 +15,10 @@ const FoodItemCard = ({ dish }) => {
   const [isHover, setHover] = useState(false);
   const dispatch = useDispatch();
   const selectedItem = useSelector((state) => state.items.selectedItem);
-  const [reRender, setReRender] = useState(false);
   const selectedItemStatus = useSelector(
     (state) => state.items.selectedItemStatus
   );
+  const [reRender, setReRender] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (selectedItem?.id === dish?.id) {

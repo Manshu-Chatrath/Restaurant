@@ -8,6 +8,7 @@ const Header = ({ activeNav }) => {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
   return (
     <>
       <Box

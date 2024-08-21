@@ -32,11 +32,26 @@ export const addToCart = createAsyncThunk(
   }
 );
 
+export const editCartItem = createAsyncThunk(
+  "editCartItem",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await apiSlice.put("/editCartItem", data);
+      return response?.data;
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const getCartItems = createAsyncThunk(
   "getCartItems",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await apiSlice.get(`/getCart/${data.id}`);
+      const response = await apiSlice.get(`/getCart/${data.cartId}`);
       return response?.data?.cartItems;
     } catch (err) {
       if (!err.response) {
@@ -76,6 +91,20 @@ export const placingOrder = createAsyncThunk(
     }
   }
 );
+export const getCartLength = createAsyncThunk(
+  "getCartLength",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await apiSlice.get(`/cartLength/${data.id}`);
+      return response?.data;
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 
 const initialState = {
   loginStatus: IDLE,
@@ -85,8 +114,11 @@ const initialState = {
   orderNumber: null,
   deleteCartItemStatus: IDLE,
   orderStatus: IDLE,
+  cartLength: 0,
+  cartLengthStatus: IDLE,
   orderStatusError: "",
   cartListItems: [],
+  editCartItemStatus: IDLE,
   cartListStatus: IDLE,
   cartListStatusError: "",
   user: null,
@@ -123,6 +155,9 @@ const userSlice = createSlice({
       state.orderStatusError = "";
       state.orderNumber = null;
     },
+    defaultEditCartItemStatus: (state) => {
+      state.editCartItemStatus = IDLE;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(userLogin.pending, (state) => {
@@ -147,8 +182,9 @@ const userSlice = createSlice({
       state.cartStatus = FAILED;
       state.cartStatusError = "Some error occured";
     });
-    builder.addCase(addToCart.fulfilled, (state) => {
+    builder.addCase(addToCart.fulfilled, (state, action) => {
       state.cartStatus = SUCCESS;
+      state.cartLength = action.payload.cartLength;
     });
 
     builder.addCase(getCartItems.pending, (state) => {
@@ -169,8 +205,9 @@ const userSlice = createSlice({
     builder.addCase(deleteCartItem.rejected, (state) => {
       state.deleteCartItemStatus = FAILED;
     });
-    builder.addCase(deleteCartItem.fulfilled, (state) => {
+    builder.addCase(deleteCartItem.fulfilled, (state, action) => {
       state.deleteCartItemStatus = SUCCESS;
+      state.cartLength = action.payload.cartLength;
     });
     builder.addCase(placingOrder.pending, (state) => {
       state.orderStatus = PENDING;
@@ -185,6 +222,26 @@ const userSlice = createSlice({
     builder.addCase(placingOrder.fulfilled, (state, action) => {
       state.orderStatus = SUCCESS;
       state.orderNumber = action.payload.orderNumber;
+      state.cartLength = 0;
+    });
+    builder.addCase(getCartLength.pending, (state) => {
+      state.cartLengthStatus = PENDING;
+    });
+    builder.addCase(getCartLength.rejected, (state) => {
+      state.cartLengthStatus = FAILED;
+    });
+    builder.addCase(getCartLength.fulfilled, (state, action) => {
+      state.cartLength = action.payload.cartLength;
+      state.cartLengthStatus = SUCCESS;
+    });
+    builder.addCase(editCartItem.pending, (state) => {
+      state.editCartItemStatus = PENDING;
+    });
+    builder.addCase(editCartItem.rejected, (state) => {
+      state.editCartItemStatus = FAILED;
+    });
+    builder.addCase(editCartItem.fulfilled, (state) => {
+      state.editCartItemStatus = SUCCESS;
     });
   },
 });
@@ -192,6 +249,7 @@ export const {
   defaultLogintStatus,
   saveUser,
   deleteUser,
+  defaultEditCartItemStatus,
   defaultCartListStatus,
   defaultOrderStatus,
   defaultCartStatus,

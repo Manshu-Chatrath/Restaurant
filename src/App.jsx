@@ -43,7 +43,7 @@ const App = () => {
     const verifyToken = async () => {
       try {
         const response = await axios.get(
-          `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${authUser?.access_token}`
+          `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${authUser?.access_token}`
         );
         if (response.data.access_type !== "online") {
           return false;

@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Button, Box, Typography, Checkbox } from "@mui/material";
+import { Button, Box, Typography } from "@mui/material";
+import CustomizedCheckBox from "./customizedCheckBox";
 import PropTypes from "prop-types";
 import React from "react";
 const ExtraItem = ({ item, setExtras, extras, price, setPrice }) => {
   const [extraItems, setExtraItems] = useState([]);
+
   const handleClick = (e, extraItem) => {
     let arr = [...extraItems];
     let totalPrice = +price; // + is added to convert string to number
@@ -35,6 +37,7 @@ const ExtraItem = ({ item, setExtras, extras, price, setPrice }) => {
       setExtras([...newArr]);
     }
   };
+
   return (
     <>
       <Box
@@ -64,6 +67,14 @@ const ExtraItem = ({ item, setExtras, extras, price, setPrice }) => {
         </Box>
       </Box>
       {item.extras.map((extra, index) => {
+        let selectedItems;
+
+        selectedItems = extras?.find((e) => e.id === extra.extraId)?.extraItems;
+        console.log(selectedItems);
+        let isSelected = false;
+        if (selectedItems?.length > 0) {
+          isSelected = selectedItems?.includes(extra.id);
+        }
         return (
           <React.Fragment key={index}>
             <Box
@@ -87,17 +98,15 @@ const ExtraItem = ({ item, setExtras, extras, price, setPrice }) => {
                 </Typography>
               </Box>
               <Box>
-                <Checkbox
-                  onChange={(e) => handleClick(e, extra)}
+                <CustomizedCheckBox
                   disabled={
-                    extraItems.length >= item.allowedItems &&
+                    (extraItems.length >= item.allowedItems ||
+                      selectedItems.length >= item.allowedItems) &&
                     !extraItems.includes(extra.id)
                   }
-                  sx={{
-                    "&.Mui-checked": {
-                      color: "black",
-                    },
-                  }}
+                  extra={extra}
+                  handleClick={handleClick}
+                  defaultChecked={isSelected}
                 />
               </Box>
             </Box>
@@ -108,11 +117,12 @@ const ExtraItem = ({ item, setExtras, extras, price, setPrice }) => {
   );
 };
 ExtraItem.propTypes = {
-  price: PropTypes.number.isRequired,
+  price: PropTypes.number.isRequired || PropTypes.string.isRequired,
   setPrice: PropTypes.func.isRequired,
   item: PropTypes.object.isRequired,
-  extras: PropTypes.array.isRequired,
+  extras: PropTypes.any.isRequired,
   setExtras: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool.isRequired,
 };
 
 export default ExtraItem;

@@ -1,21 +1,31 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getItem } from "../reducers/itemsSlice";
 import {
   Grid,
   Box,
   IconButton,
   Typography,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Loading from "./loader";
+import { PENDING } from "../utils";
 import PropTypes from "prop-types";
-
-const CartFoodItemCard = ({
-  item,
-  setIsOrderValid,
-  setOpen,
-  isOrderValid,
-  setSelectedItem,
-}) => {
+import SelectedItemModal from "./selectedItemModal";
+const CartFoodItemCard = ({ item, setOpen, setSelectedItem }) => {
   const smallScreen = useMediaQuery("(max-width:500px)");
+  const selectedItem = useSelector((state) => state.items.selectedItem);
+  const [open, setModalOpen] = useState(false);
+  const selectedItemStatus = useSelector(
+    (state) => state.items.selectedItemStatus
+  );
+  const dispatch = useDispatch();
+  const handleClick = () => {
+    setModalOpen(true);
+    dispatch(getItem({ id: item.itemId }));
+  };
   const printExtraItems = () => {
     const extraItems = item.extraItems;
     let str = ``;
@@ -25,13 +35,6 @@ const CartFoodItemCard = ({
     return <Typography sx={{ marginLeft: "10px" }}>Extras: {str}</Typography>;
   };
 
-  if (!item?.isActive && isOrderValid) {
-    setIsOrderValid(false);
-  }
-
-  if (item?.disable && isOrderValid) {
-    setIsOrderValid(false);
-  }
   const onClick = () => {
     setSelectedItem(item);
     setOpen(true);
@@ -39,6 +42,7 @@ const CartFoodItemCard = ({
 
   return (
     <Grid xs={12} md={4} item container>
+      {selectedItemStatus === PENDING && <Loading loading={true} />}
       <Box
         sx={{
           display: "flex",
@@ -50,7 +54,6 @@ const CartFoodItemCard = ({
           opacity: item?.isActive ? 1 : 0.5,
           padding: "10px",
         }}>
-        {" "}
         <IconButton
           aria-label="close"
           onClick={onClick}
@@ -96,8 +99,31 @@ const CartFoodItemCard = ({
             Price: ${item.price}
           </Typography>
           {item?.extraItems?.length > 0 ? printExtraItems() : null}
+          <Button
+            variant="contained"
+            sx={{
+              color: "white",
+              marginTop: "10px",
+              width: "30px",
+              padding: "0px",
+              marginLeft: "10px",
+              backgroundColor: "black",
+              "&:hover": {
+                backgroundColor: "black",
+              },
+            }}
+            onClick={handleClick}>
+            Edit
+          </Button>
         </Box>
       </Box>
+      {selectedItem?.id === item?.itemId && open && (
+        <SelectedItemModal
+          selectedItem={selectedItem}
+          selectedCartItem={item}
+          isEdit={true}
+        />
+      )}
     </Grid>
   );
 };
@@ -105,7 +131,5 @@ CartFoodItemCard.propTypes = {
   item: PropTypes.object.isRequired,
   setOpen: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,
-  setIsOrderValid: PropTypes.func.isRequired,
-  isOrderValid: PropTypes.func.isRequired,
 };
 export default CartFoodItemCard;

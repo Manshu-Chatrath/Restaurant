@@ -10,7 +10,12 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { defaultSelectedItemStatus } from "../reducers/itemsSlice";
 import { useGoogleLogin } from "@react-oauth/google";
-import { addToCart, userLogin, defaultCartStatus } from "../reducers/userSlice";
+import {
+  addToCart,
+  editCartItem,
+  userLogin,
+  defaultCartStatus,
+} from "../reducers/userSlice";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -19,7 +24,11 @@ import axios from "axios";
 import moment from "moment-timezone";
 import PropTypes from "prop-types";
 
-const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
+const SelectedItemModal = memo(function SelectedItemModal({
+  selectedItem,
+  selectedCartItem = null,
+  isEdit = false,
+}) {
   const smallScreen = useMediaQuery("(max-width:500px)");
   const style = {
     position: "absolute",
@@ -28,8 +37,8 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
     transform: "translate(-50%, -50%)",
     borderRadius: smallScreen ? "none" : "20px",
     textAlign: "center",
-    width: smallScreen ? "100vw" : "500px",
-    maxHeight: smallScreen ? "100vh" : "80%",
+    width: smallScreen ? "80%" : "500px",
+    maxHeight: "80%",
     overflowY: "auto",
     overflowX: "hidden",
     bgcolor: "background.paper",
@@ -50,6 +59,20 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
   });
 
   useEffect(() => {
+    if (selectedCartItem) {
+      setQuantity(selectedCartItem.quantity);
+      const arr = [];
+      if (selectedCartItem?.extraItems?.length > 0) {
+        selectedCartItem.extraItems.map((item) => {
+          arr.push({ id: item.id, extraItems: item.items.map((i) => i.id) });
+        });
+        setExtras(arr);
+      }
+      setPrice(+selectedCartItem.price);
+    }
+  }, [selectedCartItem]);
+
+  useEffect(() => {
     return () => dispatch(defaultCartStatus());
   }, []);
 
@@ -57,7 +80,7 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
     if (authUser) {
       axios
         .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${authUser.access_token}`,
+          `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${authUser.access_token}`,
           {
             headers: {
               Authorization: `Bearer ${authUser.access_token}`,
@@ -109,16 +132,30 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
     if (!user) {
       login();
     } else {
-      dispatch(
-        addToCart({
-          clientId: user.id,
-          id: selectedItem.id,
-          price: price,
-          quantity: quantity,
-          extras: extras,
-          name: selectedItem.name,
-        })
-      );
+      if (isEdit) {
+        dispatch(
+          editCartItem({
+            cartId: user.cartId,
+            id: selectedItem.id,
+            cartItemId: selectedCartItem.id,
+            price: price,
+            quantity: quantity,
+            extras: extras,
+            name: selectedItem.name,
+          })
+        );
+      } else {
+        dispatch(
+          addToCart({
+            cartId: user.cartId,
+            id: selectedItem.id,
+            price: price,
+            quantity: quantity,
+            extras: extras,
+            name: selectedItem.name,
+          })
+        );
+      }
     }
   };
 
@@ -216,6 +253,7 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
                 price={price}
                 setPrice={setPrice}
                 extras={extras}
+                isEdit={isEdit}
                 item={extra}
               />
             </React.Fragment>
@@ -261,7 +299,7 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
                 backgroundColor: "black",
               },
             }}>
-            Add To Cart
+            {isEdit ? "Update Cart" : "Add To Cart"}
           </Button>
         </Box>
       </Box>
@@ -270,5 +308,7 @@ const SelectedItemModal = memo(function SelectedItemModal({ selectedItem }) {
 });
 SelectedItemModal.propTypes = {
   selectedItem: PropTypes.object.isRequired,
+  selectedCartItem: PropTypes.object,
+  isEdit: PropTypes.bool,
 };
 export default SelectedItemModal;

@@ -18,24 +18,32 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "../reducers/userSlice";
-import { userLogin } from "../reducers/userSlice";
+import { userLogin, getCartLength } from "../reducers/userSlice";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import { List, ListItem } from "@mui/material";
 const RightSideDrawer = ({ open, setOpen, activeNav }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
+  const cartLength = useSelector((state) => state.user.cartLength);
   const isMobile = useMediaQuery("(max-width:450px)");
   const authenticatedUser = useSelector((state) => state.user.user);
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => setUser(codeResponse),
     onError: (error) => console.log("Login Failed:", error),
   });
+
+  useEffect(() => {
+    if (authenticatedUser && cartLength === 0) {
+      dispatch(getCartLength({ id: authenticatedUser.cartId }));
+    }
+  }, [authenticatedUser, cartLength]);
+
   useEffect(() => {
     if (user) {
       axios
         .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+          `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${user.access_token}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -79,7 +87,29 @@ const RightSideDrawer = ({ open, setOpen, activeNav }) => {
     {
       name: "Cart",
       handleClick: () => navigate("/cart"),
-      icon: <ShoppingCartIcon />,
+      icon: (
+        <div style={{ height: "25px", position: "relative" }}>
+          <ShoppingCartIcon />
+          <div
+            style={{
+              position: "absolute",
+              height: "15px",
+              backgroundColor: "red",
+              width: "15px",
+              color: "white",
+              fontWeight: "bolder",
+              borderRadius: "50%",
+              fontSize: 11,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              top: -4,
+              left: -3,
+            }}>
+            {cartLength}
+          </div>
+        </div>
+      ),
     },
     {
       name: "Sigin In",

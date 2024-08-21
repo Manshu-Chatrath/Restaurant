@@ -15,6 +15,7 @@ import { defaultCartStatus } from "../reducers/userSlice";
 import {
   Box,
   CircularProgress,
+  Button,
   Alert,
   Grid,
   Typography,
@@ -25,6 +26,7 @@ import Footer from "../components/footer";
 import Search from "../components/search";
 import Loading from "../components/loader";
 import HorizontalScroll from "../components/horizontalScroll";
+import { useNavigate } from "react-router-dom";
 const Menu = () => {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.items.itemsList);
@@ -45,12 +47,14 @@ const Menu = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [itemList, setItemList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const navigate = useNavigate();
   const totalItems = useSelector((state) => state.items.totalItems);
   const count = 10;
   const [categoryId, setCategoryId] = useState(null);
   const cartStatus = useSelector((state) => state.user.cartStatus);
   const [page, setPage] = useState(0);
-
+  const handleClick = () => navigate("/cart");
+  const cartLength = useSelector((user) => user.user.cartLength);
   useEffect(() => {
     if (itemList.length < totalItems) {
       const arr = [...itemList, ...items];
@@ -137,7 +141,11 @@ const Menu = () => {
   };
 
   useEffect(() => {
-    if (cartStatus === SUCCESS || cartStatus === FAILED) {
+    if (
+      cartStatus === PENDING ||
+      cartStatus === SUCCESS ||
+      cartStatus === FAILED
+    ) {
       setOpen(true);
     }
   }, [cartStatus]);
@@ -286,6 +294,31 @@ const Menu = () => {
               : null}
           </Alert>
         </Snackbar>
+        {cartLength > 0 && (
+          <Box
+            sx={{
+              position: "fixed",
+              bottom: 0,
+              width: "100%",
+              alignContent: "center",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <Button
+              onClick={handleClick}
+              sx={{
+                width: "90%",
+                padding: "10px",
+                color: "white",
+                background: "black",
+                marginBottom: "20px",
+              }}
+              variant="contained">
+              View Cart ({cartLength} {cartLength > 1 ? "items" : "item"})
+            </Button>
+          </Box>
+        )}
       </Box>
       <Footer />
     </>
